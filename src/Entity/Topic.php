@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\TopicRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use ORM\OrderBy;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TopicRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=TopicRepository::class)
@@ -42,6 +43,7 @@ class Topic
 
     /**
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="topic", orphanRemoval=true)
+     * @ORM\OrderBy({"datePost" = "ASC"})
      */
     private $posts;
 

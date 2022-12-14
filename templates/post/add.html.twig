@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Répondre{% endblock %}
+
+{% block body %}
+
+    <h1>Répondre</h1>
+
+    {{ form_start(formAddPost) }}
+
+        {{ form_row(formAddPost.textePost) }}
+
+    {{ form_end(formAddPost) }}
+
+{% endblock %}

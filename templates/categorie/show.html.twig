@@ -6,6 +6,8 @@
 
     <h1>{{categorie}}</h1>
 
+    <a href="{{path('add_topic', {'id':categorie.id})}}">Nouveau topic</a><br><br><br>
+
     {% if categorie.topics | length != 0 %}
 
         {% for topic in categorie.topics %}

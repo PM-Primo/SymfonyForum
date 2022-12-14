@@ -13,9 +13,12 @@
         {{post.auteur}}<br>
         {{post.datePost | date("d-m-Y, G:i:s")}}<br>
         {{post.textePost}}<br>
+        <a href="{{path('edit_post', {'idpost':post.id,'idtopic':topic.id })}}">Editer</a><br>
         <br>
 
     {% endfor %}
+    <br>
+    <a href="{{path('respond_topic', {'idtopic':topic.id})}}">Répondre</a>
 
 
 {% endblock %}

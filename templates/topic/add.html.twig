@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Topic{% endblock %}
+
+{% block body %}
+
+    <h1>Nouveau Topic</h1>
+
+    {{ form_start(formAddTopic) }}
+
+        {{ form_row(formAddTopic.titreTopic) }}
+        {{ form_row(formAddTopic.texteFirstPost) }}
+
+    {{ form_end(formAddTopic) }}
+
+{% endblock %}
