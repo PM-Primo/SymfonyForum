@@ -10,9 +10,8 @@
 
         {% for topic in categorie.topics %}
 
-            {{topic}}<br>
-            par {{topic.auteur}}<br>
-            le {{topic.dateTopic | date("d-m-Y")}}<br>
+            <a href="{{path('show_topic', {'id':topic.id})}}">{{topic}}</a><br>
+            {{topic.dateTopic | date("d-m-Y, G:i:s")}} - {{topic.auteur}} - {{topic.posts | length}} réponses<br>
             <br>
 
         {% endfor %}
