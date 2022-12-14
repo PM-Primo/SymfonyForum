@@ -14,6 +14,7 @@
 
             <a href="{{path('show_topic', {'id':topic.id})}}">{{topic}}</a><br>
             {{topic.dateTopic | date("d-m-Y, G:i:s")}} - {{topic.auteur}} - {{topic.posts | length}} réponses<br>
+            <a href="{{path('edit_topic', {'id':topic.id})}}">Éditer</a><br>
             <br>
 
         {% endfor %}

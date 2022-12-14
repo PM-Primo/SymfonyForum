@@ -13,7 +13,7 @@
         {{post.auteur}}<br>
         {{post.datePost | date("d-m-Y, G:i:s")}}<br>
         {{post.textePost}}<br>
-        <a href="{{path('edit_post', {'idpost':post.id,'idtopic':topic.id })}}">Editer</a><br>
+        <a href="{{path('edit_post', {'idpost':post.id,'idtopic':topic.id })}}">Editer</a> - <a href="{{path('delete_post', {'id':post.id})}}">Supprimer</a> <br>
         <br>
 
     {% endfor %}
