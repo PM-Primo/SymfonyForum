@@ -6,6 +6,8 @@
 
     <h1>{{topic}}</h1>
 
+    <a href="{{path('show_categorie', {'id':topic.categorie.id})}}"><- {{topic.categorie}}</a><br><br><br>
+
     {% for post in topic.posts %}
 
         {{post.auteur}}<br>
@@ -14,7 +16,6 @@
         <br>
 
     {% endfor %}
-
 
 
 {% endblock %}
