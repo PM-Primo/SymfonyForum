@@ -25,11 +25,6 @@ class Topic
     private $titreTopic;
 
     /**
-     * @ORM\Column(type="date")
-     */
-    private $dateTopic;
-
-    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $verrouTopic;
@@ -56,6 +51,11 @@ class Topic
      */
     private $auteur;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateTopic;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -74,18 +74,6 @@ class Topic
     public function setTitreTopic(string $titreTopic): self
     {
         $this->titreTopic = $titreTopic;
-
-        return $this;
-    }
-
-    public function getDateTopic(): ?\DateTimeInterface
-    {
-        return $this->dateTopic;
-    }
-
-    public function setDateTopic(\DateTimeInterface $dateTopic): self
-    {
-        $this->dateTopic = $dateTopic;
 
         return $this;
     }
@@ -164,6 +152,23 @@ class Topic
     public function setAuteur(?User $auteur): self
     {
         $this->auteur = $auteur;
+
+        return $this;
+    }
+
+    public function __toString():string
+    {
+        return $this->titreTopic;
+    }
+
+    public function getDateTopic(): ?\DateTimeInterface
+    {
+        return $this->dateTopic;
+    }
+
+    public function setDateTopic(\DateTimeInterface $dateTopic): self
+    {
+        $this->dateTopic = $dateTopic;
 
         return $this;
     }

@@ -23,11 +23,6 @@ class Post
     private $textePost;
 
     /**
-     * @ORM\Column(type="date")
-     */
-    private $datePost;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Topic::class, inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
      */
@@ -38,6 +33,11 @@ class Post
      * @ORM\JoinColumn(nullable=false)
      */
     private $auteur;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $datePost;
 
     public function getId(): ?int
     {
@@ -52,18 +52,6 @@ class Post
     public function setTextePost(string $textePost): self
     {
         $this->textePost = $textePost;
-
-        return $this;
-    }
-
-    public function getDatePost(): ?\DateTimeInterface
-    {
-        return $this->datePost;
-    }
-
-    public function setDatePost(\DateTimeInterface $datePost): self
-    {
-        $this->datePost = $datePost;
 
         return $this;
     }
@@ -88,6 +76,18 @@ class Post
     public function setAuteur(?User $auteur): self
     {
         $this->auteur = $auteur;
+
+        return $this;
+    }
+
+    public function getDatePost(): ?\DateTimeInterface
+    {
+        return $this->datePost;
+    }
+
+    public function setDatePost(\DateTimeInterface $datePost): self
+    {
+        $this->datePost = $datePost;
 
         return $this;
     }
