@@ -13,6 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -33,8 +34,9 @@ class TopicController extends AbstractController
      * @Route("/topic/{idtopic}/edit/{idpost}", name="edit_post")
      * @ParamConverter("topic", options={"mapping" : {"idtopic": "id"}})
      * @ParamConverter("post", options={"mapping": {"idpost": "id"}})
+     * @IsGranted("ROLE_USER")
      */
-    public function respond(ManagerRegistry $doctrine ,Post $post = null, Topic $topic = null, Request $request): Response
+    public function respond(ManagerRegistry $doctrine, Post $post = null, Topic $topic = null, Request $request): Response
     {
         if(!$post){
             $post = new Post;
@@ -50,8 +52,8 @@ class TopicController extends AbstractController
             $post->setTextePost($textePost);
             $post->setTopic($topic);
             $post->setDatePost(new DateTime());
-            $auteur =  $doctrine->getRepository(User::class)->findOneBy(['id' => '1']);
-            // $auteur = $this->getUser();
+            $auteur = $this->getUser();
+            // $auteur =  $doctrine->getRepository(User::class)->findOneBy(['id' => '1']);
             $post->setAuteur($auteur);
 
             $entityManager = $doctrine->getManager();
@@ -71,6 +73,7 @@ class TopicController extends AbstractController
 
     /**
      * @Route("categorie/{id}/topic/add", name="add_topic")
+     * @IsGranted("ROLE_USER")
      */
     public function add(ManagerRegistry $doctrine, Request $request, Categorie $categorie): Response
     {
@@ -86,8 +89,8 @@ class TopicController extends AbstractController
 
             $titreTopic = $form->get("titreTopic")->getData();
             $texteFirstPost = $form->get("texteFirstPost")->getData();
-            $auteur =  $doctrine->getRepository(User::class)->findOneBy(['id' => '1']);
-            // $auteur = $this->getUser();
+            // $auteur =  $doctrine->getRepository(User::class)->findOneBy(['id' => '1']);
+            $auteur = $this->getUser();
             $date = new DateTime();
 
             $topic = new Topic;
@@ -121,114 +124,127 @@ class TopicController extends AbstractController
 
     /**
      * @Route("topic/{id}/edit", name="edit_topic")
+     * @IsGranted("ROLE_USER")
      */
     public function edit(ManagerRegistry $doctrine, Request $request, Topic $topic): Response
     {
 
-        $posts = $topic->getPosts();
-        $post=$posts[0];
-        
-
-        $form = $this->createForm(TopicType::class, $topic);
-        $form->get('texteFirstPost')->setData($post->getTextePost());
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
+        if($topic->getAuteur()->getId() == $this->getUser()->getId()){
+            $posts = $topic->getPosts();
+            $post=$posts[0];
             
-            $entityManager = $doctrine->getManager();
-
-            $titreTopic = $form->get("titreTopic")->getData();
-            $texteFirstPost = $form->get("texteFirstPost")->getData();
-
-            $topic->setTitreTopic($titreTopic);           
-
-            $entityManager->persist($topic); //équivalent de prepare()
-            $entityManager->flush(); //équivalent de execute()
-            
-            $post->setTextePost($texteFirstPost);
-
-            $entityManager->persist($post); 
-            $entityManager->flush();
-
-            return $this->redirectToRoute('show_topic', ['id' => $topic->getId()]);
+    
+            $form = $this->createForm(TopicType::class, $topic);
+            $form->get('texteFirstPost')->setData($post->getTextePost());
+            $form->handleRequest($request);
+    
+            if($form->isSubmitted() && $form->isValid()){
+                
+                $entityManager = $doctrine->getManager();
+    
+                $titreTopic = $form->get("titreTopic")->getData();
+                $texteFirstPost = $form->get("texteFirstPost")->getData();
+    
+                $topic->setTitreTopic($titreTopic);           
+    
+                $entityManager->persist($topic); //équivalent de prepare()
+                $entityManager->flush(); //équivalent de execute()
+                
+                $post->setTextePost($texteFirstPost);
+    
+                $entityManager->persist($post); 
+                $entityManager->flush();
+    
+                return $this->redirectToRoute('show_topic', ['id' => $topic->getId()]);
+            }
+    
+            //Vue pour afficher le formulaire d'ajout
+            return $this->render('topic/add.html.twig', [
+                'formAddTopic' =>$form->createView(),
+                'edit' => $topic->getId()
+            ]);
         }
 
-        //Vue pour afficher le formulaire d'ajout
-        return $this->render('topic/add.html.twig', [
-            'formAddTopic' =>$form->createView(),
-            'edit' => $topic->getId()
-        ]);
-
+        return $this->redirectToRoute('show_topic', ['id' => $topic->getId()]);
     }
     
     /**
      * @Route("/topic/{id}/delete", name="delete_topic")
+     * @IsGranted("ROLE_USER")
      */
     public function delete(ManagerRegistry $doctrine, Topic $topic): Response
     {
-
+        if($topic->getAuteur()->getId() == $this->getUser()->getId()){
+            $entityManager = $doctrine->getManager();
+            $entityManager->remove($topic);
+            $entityManager->flush();
+        }
+        
         $id = $topic->getCategorie()->getId();
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->remove($topic);
-        $entityManager->flush();
-
         return $this->redirectToRoute('show_categorie', ['id' => $id]);
     }
     
     /**
      * @Route("/topic/{id}/lock", name="lock_topic")
+     * @IsGranted("ROLE_USER")
      */
     public function lock(ManagerRegistry $doctrine, Topic $topic): Response
     {
-        $topic->setVerrouTopic(true);
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($topic);
-        $entityManager->flush();
+        if($topic->getAuteur()->getId() == $this->getUser()->getId()){
+            $topic->setVerrouTopic(true);
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($topic);
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('show_categorie', ['id' => $topic->getCategorie()->getId()]);
     }
     
     /**
      * @Route("/topic/{id}/unlock", name="unlock_topic")
+     * @IsGranted("ROLE_USER")
      */
     public function unlock(ManagerRegistry $doctrine, Topic $topic): Response
     {
-        $topic->setVerrouTopic(false);
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($topic);
-        $entityManager->flush();
+        if($topic->getAuteur()->getId() == $this->getUser()->getId()){
+            $topic->setVerrouTopic(false);
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($topic);
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('show_categorie', ['id' => $topic->getCategorie()->getId()]);
     }
 
     /**
      * @Route("/topic/{id}/resolve", name="resolve_topic")
+     * @IsGranted("ROLE_USER")
      */
     public function resolve(ManagerRegistry $doctrine, Topic $topic): Response
     {
-        $topic->setResoluTopic(true);
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($topic);
-        $entityManager->flush();
+        if($topic->getAuteur()->getId() == $this->getUser()->getId()){
+            $topic->setResoluTopic(true);
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($topic);
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('show_categorie', ['id' => $topic->getCategorie()->getId()]);
     }
 
     /**
      * @Route("/topic/{id}/unresolve", name="unresolve_topic")
+     * @IsGranted("ROLE_USER")
      */
     public function unresolve(ManagerRegistry $doctrine, Topic $topic): Response
     {
-        $topic->setResoluTopic(false);
-
-        $entityManager = $doctrine->getManager();
-        $entityManager->persist($topic);
-        $entityManager->flush();
-
+        if($topic->getAuteur()->getId() == $this->getUser()->getId()){
+            $topic->setResoluTopic(false);
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($topic);
+            $entityManager->flush();
+        }
+        
         return $this->redirectToRoute('show_categorie', ['id' => $topic->getCategorie()->getId()]);
     }
 
