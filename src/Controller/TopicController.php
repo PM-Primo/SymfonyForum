@@ -107,7 +107,8 @@ class TopicController extends AbstractController
 
         return $this->render('post/add.html.twig', [
             'formAddPost' =>$form->createView(),
-            'edit' => $post->getId()
+            'edit' => $post->getId(),
+            'topic' => $topic
         ]);
 
     }
@@ -140,7 +141,8 @@ class TopicController extends AbstractController
             //Vue pour afficher le formulaire d'ajout
             return $this->render('post/add.html.twig', [
                 'formAddPost' =>$form->createView(),
-                'edit' => $post->getId()
+                'edit' => $post->getId(),
+                'topic' => $post->getTopic(),
             ]);
         }
 
@@ -197,6 +199,7 @@ class TopicController extends AbstractController
         //Vue pour afficher le formulaire d'ajout
         return $this->render('topic/add.html.twig', [
             'formAddTopic' =>$form->createView(),
+            'categorie' => $categorie
         ]);
 
     }
@@ -240,7 +243,8 @@ class TopicController extends AbstractController
             //Vue pour afficher le formulaire d'ajout
             return $this->render('topic/add.html.twig', [
                 'formAddTopic' =>$form->createView(),
-                'edit' => $topic->getId()
+                'edit' => $topic->getId(),
+                'categorie' => $topic->getCategorie(),
             ]);
         }
 

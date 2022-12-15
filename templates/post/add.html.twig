@@ -4,6 +4,8 @@
 
 {% block body %}
 
+    <a class="btn btn-outline-primary btn-back" href="{{path('show_topic', {'id':topic.id})}}"><i class="fa-solid fa-arrow-left"></i> {{topic}}</a>
+
     <h1>Répondre</h1>
 
     {{ form_start(formAddPost) }}
