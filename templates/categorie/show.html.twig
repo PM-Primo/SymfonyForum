@@ -4,45 +4,56 @@
 
 {% block body %}
 
-    <h1>{{categorie}}</h1>
-    
-    <a href="{{path('app_categorie')}}"><- Catégories</a><br><br><br>
+    <a class="btn btn-outline-primary btn-back" href="{{path('app_categorie')}}"><i class="fa-solid fa-arrow-left"></i> Catégories</a>
 
-    <a href="{{path('add_topic', {'id':categorie.id})}}">Nouveau topic</a><br><br><br>
+    <h1 class="titre">{{categorie}}</h1>
+    
+    <a class="btn btn-primary" href="{{path('add_topic', {'id':categorie.id})}}">Nouveau topic</a><br><br><br>
 
     {% if categorie.topics | length != 0 %}
 
         {% for topic in categorie.topics %}
+        
+            <div class="card border-primary mb-3" style="max-width: 40rem;">
+                <div class="card-header">{{topic.auteur}}</div>
+                <div class="card-body">
+                    <h4 class="card-title">            
+                        <a href="{{path('show_topic', {'id':topic.id})}}">{{topic}}</a>
+                        {% if topic.verrouTopic %}
+                            [VERROUILLÉ]
+                        {% endif %}
+                        {% if topic.resoluTopic %}
+                            [RÉSOLU]
+                        {% endif %}
+                    </h4>
+                    <p class="card-text">
+                        {{topic.dateTopic | date("d-m-Y, G:i:s")}} - {{topic.posts | length}} <i class='fa-solid fa-message'></i><br>
 
-            <a href="{{path('show_topic', {'id':topic.id})}}">{{topic}}</a>
-            {% if topic.verrouTopic %}
-                [VERROUILLÉ]
-            {% endif %}
-            {% if topic.resoluTopic %}
-                 [RÉSOLU]
-            {% endif %}
-            <br>
-            {{topic.dateTopic | date("d-m-Y, G:i:s")}} - {{topic.auteur}} - {{topic.posts | length}} réponses<br>
+                        {% if app.user == topic.auteur %}
+                            <a href="{{path('edit_topic', {'id':topic.id})}}"><i class='fa-solid fa-pen-to-square'></i></a>&nbsp&nbsp
+                            <a href="{{path('delete_topic', {'id':topic.id})}}"><i class='fa-solid fa-trash'></i></a> 
+                            {% if not topic.resoluTopic %}
+                                {% if topic.verrouTopic %}
+                                    &nbsp&nbsp<a href="{{path('unlock_topic', {'id':topic.id})}}"><i class='fa-solid fa-lock-open'></i></a>
+                                {% else %}
+                                    &nbsp&nbsp<a href="{{path('lock_topic', {'id':topic.id})}}"><i class='fa-solid fa-lock'></i></a>
+                                {% endif %}
+                            {% endif %}
 
-            {% if app.user == topic.auteur %}
-                <a href="{{path('edit_topic', {'id':topic.id})}}">Éditer</a> - <a href="{{path('delete_topic', {'id':topic.id})}}">Supprimer</a> 
-                {% if not topic.resoluTopic %}
-                    {% if topic.verrouTopic %}
-                        - <a href="{{path('unlock_topic', {'id':topic.id})}}">Déverrouiller</a>
-                    {% else %}
-                        - <a href="{{path('lock_topic', {'id':topic.id})}}">Verrouiller</a>
-                    {% endif %}
-                {% endif %}
+                            {% if not topic.verrouTopic %}
+                                {% if topic.resoluTopic %}
+                                    &nbsp&nbsp<a href="{{path('unresolve_topic', {'id':topic.id})}}"><i class="fa-regular fa-circle-question"></i></a>
+                                {% else %}
+                                    &nbsp&nbsp<a href="{{path('resolve_topic', {'id':topic.id})}}"><i class="fa-regular fa-circle-check"></i></i></a>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
 
-                {% if not topic.verrouTopic %}
-                    {% if topic.resoluTopic %}
-                        - <a href="{{path('unresolve_topic', {'id':topic.id})}}">Marquer non résolu</a>
-                    {% else %}
-                        - <a href="{{path('resolve_topic', {'id':topic.id})}}">Marquer résolu</a>
-                    {% endif %}
-                {% endif %}
-                <br>
-            {% endif %}
+
+            
             <br>
 
         {% endfor %}

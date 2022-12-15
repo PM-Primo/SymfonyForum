@@ -3,30 +3,50 @@
 {% block title %}{{topic}}{% endblock %}
 
 {% block body %}
+    
+    <a class="btn btn-outline-primary btn-back" href="{{path('show_categorie', {'id':topic.categorie.id})}}"><i class="fa-solid fa-arrow-left"></i> {{topic.categorie}}</a>
 
-    <h1>{{topic}}</h1>
-
-    <a href="{{path('show_categorie', {'id':topic.categorie.id})}}"><- {{topic.categorie}}</a><br><br><br>
+    <h1 class="titre">{{topic}}</h1>
 
     {% for post in topic.posts %}
 
-        {{post.auteur}}<br>
-        {{post.datePost | date("d-m-Y, G:i:s")}}<br>
-        {{post.textePost}}<br>
-        {% if app.user == post.auteur %}
-            <a href="{{path('edit_post', {'id':post.id})}}">Editer</a> - <a href="{{path('delete_post', {'id':post.id})}}">Supprimer</a> <br>
-        {% endif %}
+        <div class="card border-light mb-3" style="max-width: 40rem;">
+            <div class="card-header">
+                {{post.auteur}}
+                {% if app.user == post.auteur %}
+                &nbsp&nbsp&nbsp<a href="{{path('edit_post', {'id':post.id})}}"><i class='fa-solid fa-pen-to-square'></i></a>
+                &nbsp&nbsp&nbsp<a href="{{path('delete_post', {'id':post.id})}}"><i class='fa-solid fa-trash'></i></a> <br>
+                {% endif %}
+            </div>
+            <div class="card-body">
+            <p class="card-text">
+                {{post.textePost}}<br>
+                
+                <span class="post-infos">{{post.datePost | date("d-m-Y, G:i:s")}}</span>
+
+            </p>
+            
+            </div>
+        </div>
+        
         <br>
 
     {% endfor %}
     <br>
 
     {% if topic.verrouTopic %}
-        [TOPIC VERROUILLÉ]
+        
+    <div class="alert alert-dismissible alert-danger">
+        Topic verrouillé !
+    </div>
     {% elseif topic.resoluTopic %}
-        [TOPIC RÉSOLU]
+        <div class="alert alert-dismissible alert-success">
+            Topic résolu !
+        </div>
     {% else %}
-        <a href="{{path('respond_topic', {'id':topic.id})}}">Répondre</a>
+        {% if app.user %}
+            <a class="btn btn-primary" href="{{path('respond_topic', {'id':topic.id})}}">Répondre</a>
+        {% endif %}
     {% endif %}
 
 

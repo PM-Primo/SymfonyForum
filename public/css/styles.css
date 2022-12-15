@@ -1,0 +1,33 @@
+.body-wrapper{
+    padding-inline: 12.75rem;
+    padding-top: 4.5rem;
+    padding-bottom: 5rem;
+}
+
+.titre{
+    margin-bottom: 3rem;
+}
+
+.liste-categories__liste{
+  
+    font-size: 16pt;
+    line-height: 40pt;
+    
+}
+
+.btn-back{
+    margin-left: -175px;
+    margin-top: -50px;
+    margin-bottom: 50px;
+}
+
+.topic-container{
+    width: 800px;
+}
+
+.post-infos{
+    font-size: 8pt;
+    font-style: italic;
+    margin: none;
+    padding: none;
+}
