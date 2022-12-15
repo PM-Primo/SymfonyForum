@@ -1,20 +1,32 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Bienvenue sur Symfony Forum{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>Bienvenue sur Symfony Forum</h1>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi perferendis vitae molestiae sit assumenda eveniet! Quidem mollitia aspernatur 
+    quisquam porro obcaecati tenetur dolor possimus corrupti. Adipisci consequatur porro eveniet laboriosam, reprehenderit quibusdam officia debitis
+    facilis amet ullam ipsam suscipit quae tempore quisquam vel quod obcaecati odio doloremque incidunt, sequi vero.</p>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/laragon/www/SymfonyForum/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/laragon/www/SymfonyForum/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <div class="home-liens">
+        <ul>
+            <li>
+                <a class="nav-link" href="{{path('app_categorie')}}">Naviguer</a>
+            </li>
+            {% if not app.user %}
+                <li class="nav-item">
+                    <a href="{{path("app_register")}}" class="nav-link">S'inscrire</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{path("app_login")}}" class="nav-link">Se connecter</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a href="{{path("app_logout")}}" class="nav-link">Se déconnecter</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+
 {% endblock %}
