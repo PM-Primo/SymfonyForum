@@ -18,6 +18,9 @@
             {% if topic.verrouTopic %}
                 [VERROUILLÉ]
             {% endif %}
+            {% if topic.resoluTopic %}
+                 [RÉSOLU]
+            {% endif %}
             <br>
             {{topic.dateTopic | date("d-m-Y, G:i:s")}} - {{topic.auteur}} - {{topic.posts | length}} réponses<br>
             <a href="{{path('edit_topic', {'id':topic.id})}}">Éditer</a> - <a href="{{path('delete_topic', {'id':topic.id})}}">Supprimer</a> 
@@ -26,6 +29,12 @@
                 <a href="{{path('unlock_topic', {'id':topic.id})}}">Déverrouiller</a>
             {% else %}
                 <a href="{{path('lock_topic', {'id':topic.id})}}">Verrouiller</a>
+            {% endif %}
+             - 
+            {% if topic.resoluTopic %}
+                <a href="{{path('unresolve_topic', {'id':topic.id})}}">Marquer non résolu</a>
+            {% else %}
+                <a href="{{path('resolve_topic', {'id':topic.id})}}">Marquer résolu</a>
             {% endif %}
             <br><br>
 

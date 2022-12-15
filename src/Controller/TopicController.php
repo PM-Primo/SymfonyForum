@@ -204,6 +204,34 @@ class TopicController extends AbstractController
         return $this->redirectToRoute('show_categorie', ['id' => $topic->getCategorie()->getId()]);
     }
 
+    /**
+     * @Route("/topic/{id}/resolve", name="resolve_topic")
+     */
+    public function resolve(ManagerRegistry $doctrine, Topic $topic): Response
+    {
+        $topic->setResoluTopic(true);
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($topic);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('show_categorie', ['id' => $topic->getCategorie()->getId()]);
+    }
+
+    /**
+     * @Route("/topic/{id}/unresolve", name="unresolve_topic")
+     */
+    public function unresolve(ManagerRegistry $doctrine, Topic $topic): Response
+    {
+        $topic->setResoluTopic(false);
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($topic);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('show_categorie', ['id' => $topic->getCategorie()->getId()]);
+    }
+
 
     /**
      * @Route("/topic/{id}", name="show_topic")
