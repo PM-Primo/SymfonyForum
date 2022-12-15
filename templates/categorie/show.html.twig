@@ -5,6 +5,8 @@
 {% block body %}
 
     <h1>{{categorie}}</h1>
+    
+    <a href="{{path('app_categorie')}}"><- Catégories</a><br><br><br>
 
     <a href="{{path('add_topic', {'id':categorie.id})}}">Nouveau topic</a><br><br><br>
 
@@ -12,10 +14,20 @@
 
         {% for topic in categorie.topics %}
 
-            <a href="{{path('show_topic', {'id':topic.id})}}">{{topic}}</a><br>
-            {{topic.dateTopic | date("d-m-Y, G:i:s")}} - {{topic.auteur}} - {{topic.posts | length}} réponses<br>
-            <a href="{{path('edit_topic', {'id':topic.id})}}">Éditer</a> - <a href="{{path('delete_topic', {'id':topic.id})}}">Supprimer</a> <br>
+            <a href="{{path('show_topic', {'id':topic.id})}}">{{topic}}</a>
+            {% if topic.verrouTopic %}
+                [VERROUILLÉ]
+            {% endif %}
             <br>
+            {{topic.dateTopic | date("d-m-Y, G:i:s")}} - {{topic.auteur}} - {{topic.posts | length}} réponses<br>
+            <a href="{{path('edit_topic', {'id':topic.id})}}">Éditer</a> - <a href="{{path('delete_topic', {'id':topic.id})}}">Supprimer</a> 
+            - 
+            {% if topic.verrouTopic %}
+                <a href="{{path('unlock_topic', {'id':topic.id})}}">Déverrouiller</a>
+            {% else %}
+                <a href="{{path('lock_topic', {'id':topic.id})}}">Verrouiller</a>
+            {% endif %}
+            <br><br>
 
         {% endfor %}
 

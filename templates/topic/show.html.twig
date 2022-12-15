@@ -18,7 +18,11 @@
 
     {% endfor %}
     <br>
-    <a href="{{path('respond_topic', {'idtopic':topic.id})}}">Répondre</a>
 
+    {% if not topic.verrouTopic %}
+        <a href="{{path('respond_topic', {'idtopic':topic.id})}}">Répondre</a>
+    {% else %}
+        [TOPIC VERROUILLÉ]
+    {% endif %}
 
 {% endblock %}

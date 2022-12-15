@@ -175,6 +175,34 @@ class TopicController extends AbstractController
 
         return $this->redirectToRoute('show_categorie', ['id' => $id]);
     }
+    
+    /**
+     * @Route("/topic/{id}/lock", name="lock_topic")
+     */
+    public function lock(ManagerRegistry $doctrine, Topic $topic): Response
+    {
+        $topic->setVerrouTopic(true);
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($topic);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('show_categorie', ['id' => $topic->getCategorie()->getId()]);
+    }
+    
+    /**
+     * @Route("/topic/{id}/unlock", name="unlock_topic")
+     */
+    public function unlock(ManagerRegistry $doctrine, Topic $topic): Response
+    {
+        $topic->setVerrouTopic(false);
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($topic);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('show_categorie', ['id' => $topic->getCategorie()->getId()]);
+    }
 
 
     /**
