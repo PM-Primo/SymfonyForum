@@ -14,7 +14,7 @@
         {{post.datePost | date("d-m-Y, G:i:s")}}<br>
         {{post.textePost}}<br>
         {% if app.user == post.auteur %}
-            <a href="{{path('edit_post', {'idpost':post.id,'idtopic':topic.id })}}">Editer</a> - <a href="{{path('delete_post', {'id':post.id})}}">Supprimer</a> <br>
+            <a href="{{path('edit_post', {'id':post.id})}}">Editer</a> - <a href="{{path('delete_post', {'id':post.id})}}">Supprimer</a> <br>
         {% endif %}
         <br>
 
@@ -26,7 +26,7 @@
     {% elseif topic.resoluTopic %}
         [TOPIC RÉSOLU]
     {% else %}
-        <a href="{{path('respond_topic', {'idtopic':topic.id})}}">Répondre</a>
+        <a href="{{path('respond_topic', {'id':topic.id})}}">Répondre</a>
     {% endif %}
 
 

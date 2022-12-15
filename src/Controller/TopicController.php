@@ -29,20 +29,62 @@ class TopicController extends AbstractController
         ]);
     }
 
+
+    // ANCIENNE FONCTION D'AJOUT + EDITION DE POSTS COMBINES (MAINTENANT SCINDEE EN 2)
+
+    // /**
+    //  * @Route("/topic/{idtopic}/respond2", name="respond2_topic")
+    //  * @Route("/topic/{idtopic}/edit/{idpost}", name="edit_post")
+    //  * @ParamConverter("topic", options={"mapping" : {"idtopic": "id"}})
+    //  * @ParamConverter("post", options={"mapping": {"idpost": "id"}})
+    //  * @IsGranted("ROLE_USER")
+    //  */
+    // public function respond2(ManagerRegistry $doctrine, Post $post = null, Topic $topic = null, Request $request): Response
+    // {
+    //     if(!$post){
+    //         $post = new Post;
+    //     }
+
+    //     $form = $this->createForm(PostType::class, $post);
+    //     $form->handleRequest($request);
+
+    //     if($form->isSubmitted() && $form->isValid()){
+            
+    //         $textePost = $form->getData()->getTextePost();
+
+    //         $post->setTextePost($textePost);
+    //         $post->setTopic($topic);
+    //         $post->setDatePost(new DateTime());
+    //         $auteur = $this->getUser();
+    //         // $auteur =  $doctrine->getRepository(User::class)->findOneBy(['id' => '1']);
+    //         $post->setAuteur($auteur);
+
+    //         $entityManager = $doctrine->getManager();
+    //         $entityManager->persist($post); //équivalent de prepare()
+    //         $entityManager->flush(); //équivalent de execute()
+
+    //         return $this->redirectToRoute('show_topic', ['id' => $post->getTopic()->getId()]);
+    //     }
+
+    //     //Vue pour afficher le formulaire d'ajout
+    //     return $this->render('post/add.html.twig', [
+    //         'formAddPost' =>$form->createView(),
+    //         'edit' => $post->getId()
+    //     ]);
+
+    // }
+
+
     /**
-     * @Route("/topic/{idtopic}/respond", name="respond_topic")
-     * @Route("/topic/{idtopic}/edit/{idpost}", name="edit_post")
-     * @ParamConverter("topic", options={"mapping" : {"idtopic": "id"}})
-     * @ParamConverter("post", options={"mapping": {"idpost": "id"}})
+     * @Route("/topic/{id}/respond", name="respond_topic")
      * @IsGranted("ROLE_USER")
      */
-    public function respond(ManagerRegistry $doctrine, Post $post = null, Topic $topic = null, Request $request): Response
+    public function respond(ManagerRegistry $doctrine, Topic $topic, Request $request): Response
     {
-        if(!$post){
-            $post = new Post;
-        }
-
-        $form = $this->createForm(PostType::class, $post);
+        
+        $post = new Post;
+        
+        $form = $this->createForm(PostType::class);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
@@ -63,6 +105,36 @@ class TopicController extends AbstractController
             return $this->redirectToRoute('show_topic', ['id' => $post->getTopic()->getId()]);
         }
 
+        return $this->render('post/add.html.twig', [
+            'formAddPost' =>$form->createView(),
+            'edit' => $post->getId()
+        ]);
+
+    }
+
+    /**
+     * @Route("post/{id}/edit", name="edit_post")
+     * @IsGranted("ROLE_USER")
+     */
+    public function editPost(ManagerRegistry $doctrine, Post $post, Request $request): Response
+    {
+
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            
+            $textePost = $form->getData()->getTextePost();
+
+            $post->setTextePost($textePost);
+
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($post); //équivalent de prepare()
+            $entityManager->flush(); //équivalent de execute()
+
+            return $this->redirectToRoute('show_topic', ['id' => $post->getTopic()->getId()]);
+        }
+
         //Vue pour afficher le formulaire d'ajout
         return $this->render('post/add.html.twig', [
             'formAddPost' =>$form->createView(),
@@ -70,6 +142,8 @@ class TopicController extends AbstractController
         ]);
 
     }
+
+
 
     /**
      * @Route("categorie/{id}/topic/add", name="add_topic")
@@ -244,7 +318,7 @@ class TopicController extends AbstractController
             $entityManager->persist($topic);
             $entityManager->flush();
         }
-        
+
         return $this->redirectToRoute('show_categorie', ['id' => $topic->getCategorie()->getId()]);
     }
 
