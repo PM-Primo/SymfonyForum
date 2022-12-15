@@ -119,27 +119,32 @@ class TopicController extends AbstractController
     public function editPost(ManagerRegistry $doctrine, Post $post, Request $request): Response
     {
 
-        $form = $this->createForm(PostType::class, $post);
-        $form->handleRequest($request);
+        if($post->getAuteur()->getId() == $this->getUser()->getId()){
 
-        if($form->isSubmitted() && $form->isValid()){
-            
-            $textePost = $form->getData()->getTextePost();
+            $form = $this->createForm(PostType::class, $post);
+            $form->handleRequest($request);
 
-            $post->setTextePost($textePost);
+            if($form->isSubmitted() && $form->isValid()){
+                
+                $textePost = $form->getData()->getTextePost();
 
-            $entityManager = $doctrine->getManager();
-            $entityManager->persist($post); //équivalent de prepare()
-            $entityManager->flush(); //équivalent de execute()
+                $post->setTextePost($textePost);
 
-            return $this->redirectToRoute('show_topic', ['id' => $post->getTopic()->getId()]);
+                $entityManager = $doctrine->getManager();
+                $entityManager->persist($post); //équivalent de prepare()
+                $entityManager->flush(); //équivalent de execute()
+
+                return $this->redirectToRoute('show_topic', ['id' => $post->getTopic()->getId()]);
+            }
+
+            //Vue pour afficher le formulaire d'ajout
+            return $this->render('post/add.html.twig', [
+                'formAddPost' =>$form->createView(),
+                'edit' => $post->getId()
+            ]);
         }
 
-        //Vue pour afficher le formulaire d'ajout
-        return $this->render('post/add.html.twig', [
-            'formAddPost' =>$form->createView(),
-            'edit' => $post->getId()
-        ]);
+        return $this->redirectToRoute('show_topic', ['id' => $post->getTopic()->getId()]);
 
     }
 
