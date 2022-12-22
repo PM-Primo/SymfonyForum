@@ -10,6 +10,7 @@ use App\Form\PostType;
 use App\Form\TopicType;
 use App\Entity\Categorie;
 use Doctrine\Persistence\ManagerRegistry;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -335,10 +336,14 @@ class TopicController extends AbstractController
     /**
      * @Route("/topic/{id}", name="show_topic")
      */
-    public function show(Topic $topic): Response
+    public function show(Topic $topic, Request $request, PaginatorInterface $paginator): Response
     {
+
+        $posts=$paginator->paginate($topic->getPosts(), $request->query->getInt("page", 1), 5);
+
         return $this->render('topic/show.html.twig', [
             'topic' => $topic,
+            'posts' => $posts,
         ]);
     }
 }

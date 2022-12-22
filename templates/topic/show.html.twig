@@ -8,7 +8,7 @@
 
     <h1 class="titre">{{topic}}</h1>
 
-    {% for post in topic.posts %}
+    {% for post in posts %}
 
         <div class="card border-light mb-3" style="max-width: 40rem;">
             <div class="card-header">
@@ -36,11 +36,14 @@
     {% endfor %}
     <br>
 
-    {% if topic.verrouTopic %}
-        
-    <div class="alert alert-dismissible alert-danger">
-        Topic verrouillé !
+    <div class="pagination">
+        {{ knp_pagination_render(posts) }}
     </div>
+
+    {% if topic.verrouTopic %}
+        <div class="alert alert-dismissible alert-danger">
+            Topic verrouillé !
+        </div>
     {% elseif topic.resoluTopic %}
         <div class="alert alert-dismissible alert-success">
             Topic résolu !
