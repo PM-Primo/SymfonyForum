@@ -10,9 +10,9 @@
     
     <a class="btn btn-primary" href="{{path('add_topic', {'id':categorie.id})}}">Nouveau topic</a><br><br><br>
 
-    {% if categorie.topics | length != 0 %}
+    {% if topics | length != 0 %}
 
-        {% for topic in categorie.topics %}
+        {% for topic in topics %}
         
             <div class="card border-primary mb-3" style="max-width: 40rem;">
                 <div class="card-header">{{topic.auteur}}</div>
@@ -51,12 +51,12 @@
                     </p>
                 </div>
             </div>
-
-
-            
             <br>
-
         {% endfor %}
+
+        <div class="pagination">
+            {{ knp_pagination_render(topics) }}
+        </div>
 
     {% else %}
         Aucun topic dans cette catégorie pour le moment

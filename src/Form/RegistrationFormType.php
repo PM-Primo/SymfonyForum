@@ -50,6 +50,7 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096 ,   
                     ]),
                 ],
+                'help' => 'Le mot de passe doit contenir un minimum de 8 caractères',
             ])
         ;
     }
