@@ -35,3 +35,16 @@
 .btn-submit{
     margin-top: 30px;
 }
+
+.pagination {
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px
+}
+
+.pagination .current{
+    font-weight: 800;
+}
